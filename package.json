@@ -1,0 +1,27 @@
+{
+    "name": "obits",
+    "version": "0.1.0",
+    "description": "",
+    "private": true,
+    "main": "app.js",
+    "dependencies": {
+        "express": ">=3.4.0",
+        "stylus": "*",
+        "jade": "*",
+        "moment": ">=2.0.0",
+        "mongoskin": "*",
+        "underscore": "*",
+        "jquery": "*",
+	    "promised-io": "*"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js"
+    },
+    "author": {
+        "name":"Jhene Knights",
+        "email": "eugenemutai@gmail.com"
+    },
+    "homepage": "",
+    "license": "BSD-2-Clause"
+}

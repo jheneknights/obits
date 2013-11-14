@@ -1,0 +1,11 @@
+#ignore all folders in App except www
+merges/
+platforms/
+plugins/
+docs/
+
+#in servers ingore the node modules folder
+#node_modules/
+
+#ingore any file that starts with '.'
+.*

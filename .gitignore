@@ -1,0 +1,14 @@
+#ignore all folders in App except www
+merges/
+platforms/
+plugins/
+docs/
+
+#in servers ingore the node modules folder
+node_modules/
+
+.DS_Store
+
+#upload the app please if any
+!platforms/android/bin/*.apk
+~                            

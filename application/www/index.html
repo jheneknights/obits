@@ -1,0 +1,358 @@
+<!--
+/**
+ * Created by Eugene Mutai
+ * Email: eugenemutai@gmail.com
+ * Date: 8/28/13
+ * Time: 12:31 PM
+ * Description: HTML5 application template to get you started.
+ */
+-->
+<!DOCTYPE HTML>
+<html ng-app="appEngine">
+
+<head>
+    <title>Starter Kit -- Sample App</title>
+
+    <!-- Site Necessities -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="cleartype" content="on">
+
+    <!-- Favicons -->
+    <link rel="shortcut icon" type="image/png" href="" />
+    <link rel="shortcut icon" type="image/x-icon" href="" />
+
+    <!-- TukTuk Framework
+    <link rel="stylesheet" href="./bootstrap/tuktuk/tuktuk.css" />
+    <link rel="stylesheet" href="./bootstrap/tuktuk/tuktuk.theme.css" />
+    <link rel="stylesheet" href="./bootstrap/tuktuk/tuktuk.icons.css" />
+    -->
+
+    <!-- Lungo Framework -->
+    <link rel="stylesheet" href="./bootstrap/lungo/lungo.css" />
+    <link rel="stylesheet" href="./bootstrap/lungo/lungo.theme.css" />
+    <link rel="stylesheet" href="./bootstrap/lungo/lungo.icon.css" />
+    <!-- -->
+
+    <!-- Ratchet Bootstrap -->
+    <!-- <link rel="stylesheet" href="./bootstrap/ratchet/ratchet.css" /> -->
+
+    <!-- Your stylesheets -->
+    <link rel="stylesheet" href="./css/general.css" />
+
+</head>
+
+<body data-device="phone" data-position="fixed" ng-controller="AppController">
+
+    <!-- Sample Application Page -->
+    <section id="homepage" data-transition="slide" class="show">
+        <header databack="chevron-left">
+            <h1 class="title centered" data-tag>Obits
+                <span class="tag red-bg margin padding-left padding-right">{{app.user.firstname}}</span>
+            </h1>
+            <nav data-article="page-list" class="on-right">
+                <button data-view-section="create-page" data-icon="list-alt"></button>
+            </nav>
+        </header>
+        <nav data-control="groupbar">
+            <a href="#" data-view-article="newsfeed" data-label="Timeline" class="active">
+                <!-- show new newsfeed number -->
+                <span nf-if="app.user.posts.length > 0" class="tag count">{{app.user.posts.length}}</span>
+            </a>
+            <a href="#" data-view-article="following" data-label="Following"></a>
+            <a href="#" data-view-article="search-page" data-label="Search"></a>
+            <a href="#" data-view-article="page-list" data-label="Page"></a>
+        </nav>
+
+        <!-- NEWSFEED -->
+        <article id="newsfeed" class="list indented scroll active">
+            <ul ng-show="app.user.posts.length > 0">
+                <li class="thumb" ng-class="{'fw-silver': !post.postedto}" ng-repeat="post in app.user.posts">
+                    <img src="./images/html5logos/black.png">
+                    <div>
+                        <span class="on-right">{{post.createdat | timeago}}</span>
+                        <strong class="purple-text">{{post.username | capitalize}}</strong>
+                        <span class="text small">
+                            {{post.post}}
+                        </span>
+                        <small ng-if="post.ispage == 'false'" class="block padding-top text tiny">to {{post.postedto | capitalize}}</small>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- if no posts are available -->
+            <div class="empty" ng-show="app.user.posts.length == 0">
+                <span class="icon list-ul"></span>
+                <strong>Nothing Available</strong>
+                <small>When you follow a page or post to a page, their updates and updates related to them will show up here.</small>
+            </div>
+        </article>
+
+        <!-- Following Base -->
+        <article id="following" class="list indented scroll">
+            <ul ng-show="app.user.following.length > 0">
+                <li class="thumb" ng-click="goToPage(page, 'following')" ng-repeat="page in app.user.following">
+                    <img src="./images/html5logos/original.png" data-attr="{{post.createdat}}">
+                    <div>
+                        <span class="on-right tag purple-bg">{{page.dateofdeath | timeago}}</span>
+                        <strong class="purple-text">{{page.fullNames | capitalize}}</strong>
+                        <span class="text small" ngshow="page.causeofdeath !== ''">
+                            was born {{page.dateofbirth| timeago}}
+                        </span>
+                        <small class="block">{{page.dateofbirth| timeago:true}}</small>
+                    </div>
+                </li>
+            </ul>
+            <!-- if following no one -->
+            <div class="empty" ng-show="app.user.following.length == 0">
+                <span class="icon group"></span>
+                <strong>Not following anyone yet</strong>
+                <small>Pages that you follow will be listed here for fast access</small>
+            </div>
+        </article>
+
+        <!-- Search Page -->
+        <article id="search-page" class="list indented scroll">
+            <div class="form">
+                <fieldset data-icon="search">
+                    <input type="search" placeholder="Search...">
+                </fieldset>
+            </div>
+            <!-- <ul data-info="results will fall here">
+                <li class="thumb">
+                    <img src="./images/html5logos/original.png">
+                    <div>
+                        <span class="on-right tag purple-bg">3 months ago</span>
+                        <strong class="purple-text">Jhene Knights</strong>
+                        <span class="text small">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque, aliquam, nisi commodi blanditiis.
+                        </span>
+                    </div>
+                </li>
+            </ul> -->
+            <div class="empty">
+                <span class="icon search"></span>
+                <strong>Search User</strong>
+                <small>Enter the month or name of the person you are looking for</small>
+            </div>
+        </article>
+
+        <!-- List Pages that user has/or create page option -->
+        <article id="page-list" class="list indented scroll">
+            <ul ng-show="app.user.pages.length > 0">
+                <li class="thumb" ng-click="goToPage(page, 'pages')" ng-repeat="page in app.user.pages">
+                    <img src="./images/html5logos/original.png">
+                    <div data-createdat="{{page.createdat}}">
+                        <span class="on-right tag purple-bg">{{page.dateofdeath | timeago}}</span>
+                        <strong class="purple-text">{{page.fullNames | capitalize}}</strong>
+                        <span class="text small">
+                            was born {{page.dateofbirth| timeago}}
+                        </span>
+                        <small class="block">{{page.dateofbirth| timeago:true}}</small>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- if user has not created any pages -->
+            <div class="empty" ng-show="app.user.pages.length == 0">
+                <span class="icon list-alt"></span>
+                <strong>Create Page</strong>
+                <small>You have no pages under you account</small>
+                <button class="anchor block margin-top">Create Page</button>
+            </div>
+        </article>
+
+        <!-- Footer Navigation -->
+        <footer class="purple-text">
+            <nav>
+                <a href="#" data-view-article="newsfeed" data-icon="list-ul" class="active"></a>
+                <a href="#" data-view-article="following" data-icon="group"></a>
+                <a href="#" data-view-article="search-page" data-icon="search"></a>
+                <a href="#" data-view-article="page-list" data-icon="list-alt"></a>
+            </nav>
+        </footer>
+    </section>
+
+    <!-- VIEW SPECIFIC PAGE -->
+    <section id="view-page" data-transition="slide">
+        <header data-back="chevron-left">
+            <h1 class="title centered">{{page.fullNames| capitalize}}</h1>
+            <nav class="on-right">
+                <button data-view-section="create-page" data-icon="user"></button>
+            </nav>
+        </header>
+        <article class="list indented scroll">
+            <div class="page">
+                <div class="profile">
+                    <table class="profile-page">
+                        <tr>
+                            <td>
+                                <img src="./images/profile.jpg">
+                            </td>
+                            <td>
+                                <h2>{{page.fullNames | capitalize}}</h2>
+                            </td>
+                        </tr>
+                    </table>
+                    <img class="blurthis" src="images/page-background.jpg">
+                    <div>
+                        <button ng-bind="page.fwstatus ? 'following': 'follow'" ng-class="{accept: page.fwstatus, cancel: !page.fwstatus}" ng-click="followPrompt(page.id, page.fwstatus)" class="anchor margin-bottom">Follow</button>
+                        <ul>
+                            <li class="feature">
+                                <div class="padding text small light">
+                                    <span class="text bold">born:</span>{{page.dateofbirth| timeago:true}}
+                                </div>
+                                <div class="padding text small light">
+                                    <span class="text bold">date of death:</span>
+                                    {{page.dateofdeath | timeago:true}}
+                                    <span class="purple-text">({{page.dateofdeath | timeago}})</span>
+                                </div>
+                                <div class="padding text small light">
+                                    <span class="text bold">cause of death:</span>{{page.causeofdeath}}
+                                </div>
+                                <!-- <div class="text thin">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos officia dolore in perferendis eum ducimus molestias...</p> -->
+                            </li>
+                        </ul>
+                        <form name="cmt" novalidate ng-submit="createPost(cmt)">
+                            <fieldset>
+                                <textarea name="comment" ng-model="comment" placeholder="post something here..." required></textarea>
+                                <!-- <tt>comment: {{cmt.comment.$valid}}</tt> -->
+                            </fieldset>
+                            <input type="hidden" id="page-userid" name="userid" value="{{page.createdby}}">
+                            <input type="hidden" id="page-id" name="pageid" value="{{page.id}}">
+                            <input type="hidden" id="page-ispage" name="ispage" value="{{page.ispage}}">
+                            <button ng-show="cmt.comment.$valid" class="anchor margin-top">Post</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- show all posts related to the user -->
+            <ul ng-show="page.posts.length > 0">
+                <li class="anchor contrast"><small>Page related posts: {{page.posts.length}}</small></li>
+                <li class="thumb" ng-class="{'fw-silver': !post.postedto}" ng-repeat="post in page.posts">
+                    <img src="./images/html5logos/black.png">
+                    <div>
+                        <span class="on-right">{{post.createdat | timeago}}</span>
+                        <strong class="purple-text">{{post.username | capitalize}}</strong>
+                        <span class="text small">
+                            {{post.post}}
+                        </span>
+                        <small ng-if="post.ispage == 'false'" class="block padding-top text tiny">to {{post.postedto | capitalize}}</small>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- if no posts are available -->
+            <div class="empty" ng-show="page.posts.length == 0">
+                <span class="icon list-ul"></span>
+                <strong>No Posts, Be the first.</strong>
+                <small>This page has not posted anything yet and there are no posts related to it</small>
+                <div class="img h256 padding margin">&nbsp;</div>
+            </div>
+        </article>
+    </section>
+
+    <section id="create-page" data-transition="slide">
+        <header data-back="chevron-left">
+            <h1 class="title centered">Create Page</h1>
+        </header>
+        <article class="indented scroll">
+            <div class="form">
+                <tt>
+                    <form name="form" novalidate ng-submit="createPage(form)">
+                        <label>Full Names (Two Names):</label>
+                        <input type="text" name="fullNames" ng-model="fullNames" ng-pattern="/^[\w]+(\s)[\w]+$/" required="{{!form.fullNames.$valid}}" placeholder="full names of beloved" class="border">
+                        <label>Date of Birth:</label>
+                        <input type="text" name="dateofbirth" ng-model="dateofbirth" ng-pattern="/^[\d]{2}(\s|\/|\-|\\)[\d]{2}(\s|\/|\-|\\)[\d]{2,4}$/" required="{{!form.dateofbirth.$valid}}" placeholder="DD-MM-YY/YYYY" class="border">
+                        <label>Date of Death:</label>
+                        <input type="text" name="dateofdeath" ng-model="dateofdeath" ng-pattern="/^[\d]{2}(\s|\/|\-|\\)[\d]{2}(\s|\/|\-|\\)[\d]{2,4}$/" required="{{!form.dateofdeath.valid}}" placeholder="DD-MM-YY/YYYY" class="border">
+                        <label>Cause of Death:</label>
+                        <input type="text" name="causeofdeath" ng-model="causeofdeath" placeholder="cause of death" class="border">
+                        <label>Current Arrangements:</label>
+                        <fieldset>
+                            <textarea name="arrangements" ng-model="arrangements" placeholder="any arrangements..."></textarea>
+                        </fieldset>
+                        <!-- <tt>fullnames: {{form.fullNames.$valid}}</tt> -->
+                        <!-- <tt>Is everything okay: {{form.$valid}}</tt> -->
+                        <button ng-class="{accept: form.$valid, cancel: !form.$valid}" class="anchor margin-top">Create Page:</button>
+                </tt>
+                </form>
+            </div>
+        </article>
+    </section>
+
+    <!-- SPLASH: LOGIN PAGE -->
+    <section id="signup-login" data-transition="slide">
+        <article class="active splash">
+            <img src="./images/html5logos/white.png" class="logo">
+            <div class="form">
+                <form name="signup" novalidate ng-submit="signIn(signup)">
+                    <fieldset class="radius-top" data-icon="user">
+                        <input type="text" name="fullNames" ng-model="fullNames" ng-pattern="/^[\w]+(\s)[\w]+$/" ng-class="{'error': !signup.fullNames.$valid}" placeholder="Your username" id="txt-signup-name" value="" required>
+                    </fieldset>
+                    <fieldset class="radius-bottom shadow" data-icon="phone">
+                        <input type="text" name="phoneNumber" ng-model="phoneNumber" ng-pattern="/^(\+)?[\d]{6,}$/" ng-class="{'error': !signup.phoneNumber.$valid}" placeholder="Your phone number" value="" required>
+                    </fieldset>
+                    <br>
+                    <button class="anchor" id="sign-up" dataviewsection="homepage">
+                        <span class="icon lock"></span>
+                        <abbr>Sign In: {{signup.$valid}}</abbr>
+                    </button>
+                </form>
+            </div>
+            <span class="copyright text thin">Handcrafted by
+                <span class="text bold">Jhene Knights</span>&copy;2013
+            </span>
+        </article>
+    </section>
+
+    <javascript>
+        <!-- Base engine, for Phonegap app -->
+        <!-- // <script type="text/javascript" src="cordova.js"></script> -->
+        <!-- // <script type="text/javascript" src="./js/libraries/cordova.test.min.js"></script> -->
+
+        <!-- jQuery library -->
+        <script type="text/javascript" src="./js/libraries/jquery-1.9.1.min.js"></script>
+
+        <!-- Angularjs MVC, MVVM framework-->
+        <script type="text/javascript" src="./angular/angular.min.js"></script>
+        <!-- // <script type="text/javascript" src="./angular/angular-resource.min.js"></script> -->
+
+        <!-- QuoJS, touch supporting library -->
+        <script type="text/javascript" src="./js/libraries/quo.debug.js"></script>
+        <!-- // <script type="text/javascript" src="./js/libraries/quo.js"></script> -->
+
+        <!-- tuk tuk|lungo|ratchet, require jQuery -->
+        <!-- // <script type="text/javascript" src="./bootstrap/tuktuk/tuktuk.js"></script> -->
+        <script type="text/javascript" src="./bootstrap/lungo/lungo.js"></script>
+        <!-- // <script type="text/javascript" src="./bootstrap/ratchet/ratchet.min.js"></script> -->
+
+        <!-- For cookies and touch -->
+        <script type="text/javascript" src="./js/plugins/jquery.cookie.js"></script>
+        <!-- // <script type="text/javascript" src="./js/plugins/jquery.hammer.min.js"></script> -->
+
+        <!-- for scrolling
+        <link rel="stylesheet" href="./js/scrolling/jquery.mCustomScrollbar.css" />
+        <script type="text/javascript" src="./js/scrolling/jquery.mCustomScrollbar.min.js"></script>
+        -->
+
+        <!-- Knockout MVVM framework --
+        <script type="text/javascript" src="./js/libraries/knockout-3.0.0.js"></script>
+        <script type="text/javascript" src="./js/plugins/knockout.validation.js"></script>
+        -->
+
+        <!-- Time management -->
+        <script type="text/javascript" src="./js/libraries/moment.min.js"></script>
+
+        <!-- Your app functions script, place last because of all of the dependencies to run -->
+        <script type="text/javascript" src="./js/application.js"></script>
+    </javascript>
+
+</body>
+
+</html>

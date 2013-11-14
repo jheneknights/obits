@@ -1,0 +1,88 @@
+/* general purpose */
+html, body {
+    padding: 0;
+    margin: 0;
+    cursor: default;
+    overflow-x: hidden;
+}
+.fixed{position: fixed; width: 100%; bottom: 0; left: 0;}
+.hidden{display: none;}
+/*.blurthis{-webkit-filter: blur(2px); filter: blur(2px);}*/
+header .icon{color: white; box-shadow: none; text-shadow: 0 0.1em #777;}
+/*footer .icon{color: #ecf0f1;}*/
+
+/* ---------- PAGE TRANSITIONS --------- */
+/*** adds the sliding animation to the page ***/
+.panel{
+    width: 100%;
+    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    box-shadow: 4px -4px 4px rgba(0,0,0,0.2);
+    margin-left: -150%;
+    z-index:999;
+    overflow-x: hidden;
+    -webkit-transition: all .4s ease-in-out;
+    -moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -ms-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+.panel:target{
+    margin-left: 0%;
+    background-color: #b1e583;
+}
+
+/*** splash page, or app full page rendering ***/
+.splash, .app-page{width: 100%; height: 100%; margin:0; overflow: hidden;}
+.overlay{background: #000; opacity: .7; position: fixed; top: 0; left: 0; z-index: 99; display: none;}
+
+/** logo corrections **/
+img.logo{
+    /*margin: auto 20%;*/
+    width: 60%;
+    margin-left: 20%;
+}
+
+/****** Background colors: helpful *************/
+.red-bg{background: #e74c3c}
+.orange-bg{background: #f39c12}
+.green-bg{background: #2ecc71} /* PS --- can be used inside list tags to give them background colors */
+.yellow-bg{background: #f1c40f}
+.blue-bg{background: #3498DB}
+.purple-bg{background: #8e44ad;}
+.grey-bg{background: #bdc3c7}
+.white-bg{background: #fefefe}
+[class|=-bg]{color: #fefefe !important}
+
+.red-text{color: #e74c3c}
+.orange-text{color: #f39c12}
+.green-text{color: #2ecc71} /* PS --- can be used inside list tags to give them color colors */
+.yellow-text{color: #f1c40f}
+.blue-text{color: #3498DB}
+.purple-text{color: #8e44ad;}
+.grey-text{color: #bdc3c7}
+.black-text{color: black;}
+.white-text{color: #fefefe;}
+
+/* Your own css should follow from here */
+.small-padding{padding: 0.3em;}
+.error span{color: #e74c3c;}
+.no-scroll{height: 100%; overflow-y: scroll; overflow-x: hidden}
+
+/******* PAGE *****/
+/*article#page{position: relative; top: 0; left:0;}*/
+.page{width: 100%;}
+.profile, .profiler{width: 100%;}
+.profile > img{width: 100%}
+table.profile-page{position: absolute; width: 90%; left: 5%; top: 15%; z-index: 2}
+table.profile-page td{padding: 0 4%; color: #ffffff; vertical-align: middle;}
+table.profile-page td:first-child{width: 40%}
+table.profile-page td:last-child{width: 60%}
+table.profile-page td img{width: 100%; border: 4px solid #ffffff; border-radius: 3px}
+.add-post{border-bottom: 1px solid lightgray; margin-bottom: 5px 0}
+
+fieldset span.validationMessage{color: #e74c3c !important;}
+fieldset input, [required], input:required, .form input:required{color: #bdc3c7 !important;}
