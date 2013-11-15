@@ -99,7 +99,7 @@ var app = {
             $.get(app.URL.remote + '/users', user).done(function(data) {
                 app.scope.$apply(function() {
                     app.user = data;
-                    if(redirectTo) Lungo.Router.article('homepage', redirectTo);
+                    if (redirectTo) Lungo.Router.article('homepage', redirectTo);
                 })
                 console.log(data);
             }).fail(function() {
@@ -141,13 +141,15 @@ var app = {
 }
 
 //Now pass the apps business logics to angular
-appEngine.controller('AppController', ['$scope', '$http', '$timeout', 
+appEngine.controller('AppController', ['$scope', '$http', '$timeout',
     function AppController($scope, $http, $timeout) {
         //initialise app
         $scope.app = app;
         $scope.app.scope = $scope;
         $scope.page = {};
         $scope.page.posts = [];
+        $scope.search = [];
+        $scope.search.nothingfound = false;
 
         //check servers for the page
         $scope.queryServers = function(pageid, bool) {
@@ -160,15 +162,17 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
                     return m._id;
                 });
                 console.log(p_ids, pageid)
-                var fw = $.inArray(pageid, p_ids) > -1 ? true: false;
+                var fw = $.inArray(pageid, p_ids) > -1 ? true : false;
                 $scope.$apply(function() {
                     $scope.page = res.page;
                     $scope.page.id = res.page._id;
                     $scope.page.fwstatus = fw;
                     $scope.page.posts = res.posts;
-                    if(!bool) Lungo.Router.section('view-page');
+                    if (!bool) Lungo.Router.section('view-page');
                 })
-                console.log(res.posts.map(function(m, i) { return m.post; }));
+                console.log(res.posts.map(function(m, i) {
+                    return m.post;
+                }));
             }).fail(function() {
                 console.log("something went wrong getting page data");
             });
@@ -183,7 +187,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
                     return m._id === page._id;
                 });
                 //if anything was acquired.
-                $scope.page.ispage = r.length > 0 ? true: false;                
+                $scope.page.ispage = r.length > 0 ? true : false;
             } else {
                 //does not own the page that will be loaded
                 $scope.page.ispage = false;
@@ -198,14 +202,14 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
                 fullNames: fd.fullNames.$viewValue,
                 dateofbirth: fd.dateofbirth.$viewValue,
                 dateofdeath: fd.dateofdeath.$viewValue,
-                causeofdeath: fd.causeofdeath.$viewValue ? fd.causeofdeath.$viewValue: "",
-                arrangements: fd.arrangements.$viewValue ? fd.arrangements.$viewport: "",
+                causeofdeath: fd.causeofdeath.$viewValue ? fd.causeofdeath.$viewValue : "",
+                arrangements: fd.arrangements.$viewValue ? fd.arrangements.$viewport : "",
                 createdby: $scope.app.user._id
             }
             console.log("sending this to create page", request)
             jQuery.get($scope.app.URL.remote + '/createpage', request).done(function(res) {
                 console.log("page was created successfully.", res);
-                if(res.status) 
+                if (res.status)
                     $scope.app.checkUser('page-list');
             }).fail(function(reason) {
                 console.log("Failed to create page", reason)
@@ -216,21 +220,21 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
         $scope.createPost = function(fd) {
             console.log(fd);
             //check if page is owned by this user
-            var r = $.inArray($scope.app.user.pageids, $('input#page-id').val()) > -1 ? true: false;
+            var r = $.inArray($scope.app.user.pageids, $('input#page-id').val()) > -1 ? true : false;
             var request = {
                 post: fd.comment.$viewValue,
-                username: $scope.page.ispage ? $scope.page.fullNames: $scope.app.user.fullNames,
-                postedto: $scope.page.ispage == false ? $scope.page.fullNames: false,
+                username: $scope.page.ispage ? $scope.page.fullNames : $scope.app.user.fullNames,
+                postedto: $scope.page.ispage == false ? $scope.page.fullNames : false,
                 pageid: $scope.page.id,
                 ispage: $scope.page.ispage
             }
             //If the one posting to the page does not own page, add his userid
-            if(!request.ispage) request.userid = $scope.app.user._id;
+            if (!request.ispage) request.userid = $scope.app.user._id;
             //Finish up
             console.log("sending this to create page", request)
             jQuery.get($scope.app.URL.remote + '/createpost', request).done(function(res) {
                 console.log("added post to page successfully", res);
-                if(res.status) { //Refresh page posts
+                if (res.status) { //Refresh page posts
                     $scope.queryServers(request.pageid);
                     $scope.checkUser(); //and also newsfeed
                 }
@@ -242,23 +246,56 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
         //If user is following or unfollowing page
         $scope.followPrompt = function(pageid, fwstatus) {
             //if user is following page, make him unfollow
-            var bool = fwstatus == true ? false: true
+            var bool = fwstatus == true ? false : true
             //Is user following or unfollowing
             // var root = bool ? '/followpage': '/unfollowpage';
-            jQuery.get($scope.app.URL.remote + '/followpage', {pageid: pageid, userid: $scope.app.user._id, bool: bool}).done(function(res) {
+            jQuery.get($scope.app.URL.remote + '/followpage', {
+                pageid: pageid,
+                userid: $scope.app.user._id,
+                bool: bool
+            }).done(function(res) {
                 console.log("following status", res, bool);
-                if(res.status) { 
+                if (res.status) {
                     //if user was unfollowing the page do redirect him
                     //to following article after refresh of user
-                    var redirect = false; bool ? false: 'following';
+                    var redirect = false;
+                    bool ? false : 'following';
                     $scope.app.checkUser(redirect);
-                    $scope.$apply(function() { 
+                    $scope.$apply(function() {
                         $scope.page.fwstatus = bool; //if he was following, update the button color
                     });
                 }
             }).fail(function(reason) {
                 console.log("Failed to create page", reason)
             })
+        }
+
+        $scope.searchPage = function(param) {
+            console.log(param)
+            if (param.length > 2) {
+                $scope.$apply(function() {
+                    $scope.search.nothingfound = false;
+                }); //hide the nothing found part if shown
+                jQuery.get($scope.app.URL.remote + '/searchpage', {
+                    param: param
+                }, function(res) {
+                    if (res.status) {
+                        $scope.$apply(function() {
+                            $scope.search = res.results;
+                        })
+                    } else {
+                        $scope.$apply(function() {
+                            $scope.search = [];
+                            $scope.search.nothingfound = true;
+                        })
+                    }
+                })
+            } else {
+                $scope.$apply(function() {
+                    $scope.search = [];
+                    $scope.search.nothingfound = false;
+                })
+            }
         }
 
         $scope.signIn = function(fd) {

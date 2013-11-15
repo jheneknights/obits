@@ -39,6 +39,7 @@ app.get('/feeds', application.feeds);
 app.get('/createpage', application.createpage);
 app.get('/viewpage', application.viewpage);
 app.get('/followpage', application.followpage);
+app.get('/searchpage', application.searchpage);
 app.get('/createpost', application.createpost);
 app.get('/following', application.following);
 

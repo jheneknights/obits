@@ -139,6 +139,13 @@ exports.followpage = function(req, res) {
     })
 }
 
+exports.searchpage = function(req, res) {
+    // search and send back the results
+    app.searchPage(req.query.param).then(function(results) {
+        res.json(results);
+    });
+}
+
 var app = {
     checkUser: function(p, r) {
         var userSearch = { //user search param
@@ -454,6 +461,23 @@ var app = {
             } else {
                 //no page was found, just return this reason 1st
                 deferred.resolve(r);
+            }
+        })
+        return deferred.promise;
+    },
+    searchPage: function(param) {
+        var deferred =  new Deferred();
+        // param = '^(' + param.toLowerCase() + ')\\s?[\\w.-]+?$'
+        var re = new RegExp(param, 'gi'); console.log(re)
+        //now search the DB
+        //FAILED (returns ids only) - {'$or': [{firstname: {'$regex': re}}, {lastname: {'$regex': re}}]}, {'$limit': 30}
+        pages.find({fullNames: {'$regex': re}}).toArray(function(e, res) {
+            if(e) throw e;
+            if(res && !_.isEmpty(res)) {
+                var ids = $.map(res, function(m, i) { return m._id; });
+                deferred.resolve({status: true, results: res, ids: ids});
+            }else{
+                deferred.resolve({status: false, message: "Ohw! no page has been found related to the name '" + param + "'"});
             }
         })
         return deferred.promise;

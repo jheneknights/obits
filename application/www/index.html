@@ -119,25 +119,36 @@
         <article id="search-page" class="list indented scroll">
             <div class="form">
                 <fieldset data-icon="search">
-                    <input type="search" placeholder="Search...">
+                    <input type="search" ng-model="param" ng-keyup="searchPage(param)" placeholder="Search page?">
                 </fieldset>
             </div>
-            <!-- <ul data-info="results will fall here">
-                <li class="thumb">
-                    <img src="./images/html5logos/original.png">
+            <!-- Results will fall here -->
+            <ul data-info="results will fall here">
+                <li class="thumb" ng-click="goToPage(page, 'following')" ng-repeat="page in search">
+                    <img src="./images/html5logos/original.png" data-attr="{{post.createdat}}">
                     <div>
-                        <span class="on-right tag purple-bg">3 months ago</span>
-                        <strong class="purple-text">Jhene Knights</strong>
-                        <span class="text small">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque, aliquam, nisi commodi blanditiis.
+                        <span class="on-right tag purple-bg">{{page.dateofdeath | timeago}}</span>
+                        <strong class="purple-text">{{page.fullNames | capitalize}}</strong>
+                        <span class="text small" ngshow="page.causeofdeath !== ''">
+                            was born {{page.dateofbirth| timeago}}
                         </span>
+                        <small class="block">{{page.dateofbirth| timeago:true}}</small>
                     </div>
                 </li>
-            </ul> -->
-            <div class="empty">
+            </ul>
+
+            <!-- before search -->
+            <div class="empty" ng-show="search.length == 0 && !search.nothingfound">
                 <span class="icon search"></span>
                 <strong>Search User</strong>
                 <small>Enter the month or name of the person you are looking for</small>
+            </div>
+
+            <!-- After search -->
+            <div class="empty" ng-show="search.nothingfound">
+                <span class="icon exclamation-sign"></span>
+                <strong>Nothing found.</strong>
+                <small>No page found related to the your search: {{param}}</small>
             </div>
         </article>
 
@@ -162,7 +173,7 @@
                 <span class="icon list-alt"></span>
                 <strong>Create Page</strong>
                 <small>You have no pages under you account</small>
-                <button class="anchor block margin-top">Create Page</button>
+                <button data-view-section="create-page" class="anchor block margin-top">Create Page</button>
             </div>
         </article>
 
