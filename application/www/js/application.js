@@ -61,7 +61,7 @@ var app = {
     scope: undefined,
     URL: {
         local: "http://localhost:3000",
-        remote: ""
+        remote: "http://jkobits.aws.af.cm"
     },
     // Application Constructor
     initialize: function() {
@@ -96,7 +96,7 @@ var app = {
         var user = app.storeThisSmartly('obitsUser');
         if (user) {
             console.log(user); //print out the user info that you have
-            $.get(app.URL.local + '/users', user).done(function(data) {
+            $.get(app.URL.remote + '/users', user).done(function(data) {
                 app.scope.$apply(function() {
                     app.user = data;
                     if(redirectTo) Lungo.Router.article('homepage', redirectTo);
@@ -152,7 +152,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
         //check servers for the page
         $scope.queryServers = function(pageid, bool) {
             // nothing was found, ping the server for data
-            jQuery.get($scope.app.URL.local + '/viewpage', {
+            jQuery.get($scope.app.URL.remote + '/viewpage', {
                 pageid: pageid
             }).done(function(res) {
                 //check if user follows page
@@ -203,7 +203,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
                 createdby: $scope.app.user._id
             }
             console.log("sending this to create page", request)
-            jQuery.get($scope.app.URL.local + '/createpage', request).done(function(res) {
+            jQuery.get($scope.app.URL.remote + '/createpage', request).done(function(res) {
                 console.log("page was created successfully.", res);
                 if(res.status) 
                     $scope.app.checkUser('page-list');
@@ -228,7 +228,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
             if(!request.ispage) request.userid = $scope.app.user._id;
             //Finish up
             console.log("sending this to create page", request)
-            jQuery.get($scope.app.URL.local + '/createpost', request).done(function(res) {
+            jQuery.get($scope.app.URL.remote + '/createpost', request).done(function(res) {
                 console.log("added post to page successfully", res);
                 if(res.status) { //Refresh page posts
                     $scope.queryServers(request.pageid);
@@ -245,7 +245,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
             var bool = fwstatus == true ? false: true
             //Is user following or unfollowing
             // var root = bool ? '/followpage': '/unfollowpage';
-            jQuery.get($scope.app.URL.local + '/followpage', {pageid: pageid, userid: $scope.app.user._id, bool: bool}).done(function(res) {
+            jQuery.get($scope.app.URL.remote + '/followpage', {pageid: pageid, userid: $scope.app.user._id, bool: bool}).done(function(res) {
                 console.log("following status", res, bool);
                 if(res.status) { 
                     //if user was unfollowing the page do redirect him
@@ -280,7 +280,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
 
         //bind the app on document load
         angular.element(window).on('load', function() {
-            $scope.app.deviceready();
+            $scope.app.initialize();
         })
     }
 ])

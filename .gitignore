@@ -10,5 +10,4 @@ node_modules/
 .DS_Store
 
 #upload the app please if any
-!platforms/android/bin/*.apk
-~                            
+!platforms/android/bin/*.apk                            

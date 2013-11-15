@@ -11,7 +11,7 @@
         "moment": ">=2.0.0",
         "mongoskin": "*",
         "underscore": "*",
-        "jquery": "*",
+        "jquery": ">=1.6.2",
 	    "promised-io": "*"
     },
     "scripts": {
