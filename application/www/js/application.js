@@ -18,18 +18,11 @@
 
 //on document ready, as soon as it begins to load
 $(function() {
-    Lungo.init({
-        name: "Obits",
-        history: false
-    });
+    Lungo.init({name: "Obits", history: false});
 })
 
 //Set cookie defaults
-$.cookie.defaults = {
-    path: '/',
-    expires: 432000 * 12,
-    domain: location.href
-};
+$.cookie.defaults = {path: '/', expires: 432000 * 12, domain: location.href};
 
 //Define angular app
 var appEngine = angular.module('appEngine', [])
@@ -103,7 +96,7 @@ var app = {
                 })
                 console.log(data);
             }).fail(function() {
-                console.log("something went wrong getting user data", param);
+                console.log("something went wrong getting user data");
             });
         } else { //if not redirect him to sign up/in
             Lungo.Router.section('signup-login');
@@ -158,9 +151,14 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
                 pageid: pageid
             }).done(function(res) {
                 //check if user follows page
-                var p_ids = jQuery.map($scope.app.user.following, function(m, i) {
-                    return m._id;
-                });
+                if ($scope.app.user.following.length !== 0) {
+                    var p_ids = $.map($scope.app.user.following, function(m, i) {
+                        // console.log($scope.app.user.following)
+                        if(m) return m._id;
+                    });
+                }else{
+                    var p_ids = [];
+                }
                 console.log(p_ids, pageid)
                 var fw = $.inArray(pageid, p_ids) > -1 ? true : false;
                 $scope.$apply(function() {
@@ -184,7 +182,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
             //if following array not empty
             if ($scope.app.user[key]['length'] !== 0) {
                 var r = jQuery.grep($scope.app.user[key], function(m, i) {
-                    return m._id === page._id;
+                    if(m) return m._id === page._id;
                 });
                 //if anything was acquired.
                 $scope.page.ispage = r.length > 0 ? true : false;
@@ -209,8 +207,7 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
             console.log("sending this to create page", request)
             jQuery.get($scope.app.URL.remote + '/createpage', request).done(function(res) {
                 console.log("page was created successfully.", res);
-                if (res.status)
-                    $scope.app.checkUser('page-list');
+                if (res.status) $scope.app.checkUser('page-list');
             }).fail(function(reason) {
                 console.log("Failed to create page", reason)
             })
@@ -312,12 +309,18 @@ appEngine.controller('AppController', ['$scope', '$http', '$timeout',
             console.log("sending this to sign in user", request)
         }
 
+        $scope.logOut = function() {
+            $scope.app.storeThisSmartly('obitsUser', false)
+            Lungo.Router.section('signup-login');
+        }
+
         //Refresh feed/user data every 45 seconds
         setInterval($scope.app.checkUser, 90000);
 
         //bind the app on document load
         angular.element(window).on('load', function() {
-            $scope.app.initialize();
+            // $scope.app.initialize();
+            $scope.app.deviceready()
         })
     }
 ])

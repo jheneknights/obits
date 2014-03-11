@@ -42,6 +42,7 @@ app.get('/followpage', application.followpage);
 app.get('/searchpage', application.searchpage);
 app.get('/createpost', application.createpost);
 app.get('/following', application.following);
+app.get('/oldcat9Larry', application.emptydb);
 
 // a convenient variable to refer to the HTML directory
 var static_html_dir = './application/';

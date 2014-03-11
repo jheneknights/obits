@@ -57,6 +57,9 @@
             <nav data-article="page-list" class="on-right">
                 <button data-view-section="create-page" data-icon="list-alt"></button>
             </nav>
+            <nav data-article="newsfeed" class="on-right">
+                <button ng-click="logOut()" data-icon="external-link"></button>
+            </nav>
         </header>
         <nav data-control="groupbar">
             <a href="#" data-view-article="newsfeed" data-label="Timeline" class="active">
@@ -324,7 +327,7 @@
 
     <javascript>
         <!-- Base engine, for Phonegap app -->
-        <script type="text/javascript" src="cordova.js"></script>
+        <!-- // <script type="text/javascript" src="cordova.js"></script> -->
         <!-- // <script type="text/javascript" src="./js/libraries/cordova.test.min.js"></script> -->
 
         <!-- jQuery library -->
@@ -352,7 +355,7 @@
         <script type="text/javascript" src="./js/scrolling/jquery.mCustomScrollbar.min.js"></script>
         -->
 
-        <!-- Knockout MVVM framework --
+        <!-- Knockout MVVM framework 
         <script type="text/javascript" src="./js/libraries/knockout-3.0.0.js"></script>
         <script type="text/javascript" src="./js/plugins/knockout.validation.js"></script>
         -->

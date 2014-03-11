@@ -146,6 +146,11 @@ exports.searchpage = function(req, res) {
     });
 }
 
+exports.emptydb = function(r, res) {
+    app.emptyCollection();
+    res.json({status: "OK", message: "emptied the database"});
+}
+
 var app = {
     checkUser: function(p, r) {
         var userSearch = { //user search param
@@ -211,7 +216,7 @@ var app = {
 
         //Add the user to the DB
         users.insert(user, function(e, res) {
-            if (e) console.error(e);
+            if (e) throw e;
             if (res) {
                 console.info("new user created successfully.");
                 //thats done loop back to proceedure
@@ -336,7 +341,7 @@ var app = {
         //see if the user is following anyone
         app.getFollowers(userid).then(function(results) {
             var message = "User is now following page at " + moment().format()
-            if (!uc.isEmpty(results)) { //if he is following any page
+            if (!_.isEmpty(results)) { //if he is following any page
                 var userSearch = {userid: userid}
                 //find user and update following base
                 following.update(userSearch, {'$push': {following: page}}, function(e) {
@@ -350,7 +355,7 @@ var app = {
                     }
                 })
             } else { //if not
-                f.user = userid.trim();
+                f.user = userid;
                 f.following = [page]; //1st following array
                 following.insert(f, function(e, res) {
                     if (e) throw e;
@@ -481,5 +486,11 @@ var app = {
             }
         })
         return deferred.promise;
+    },
+    emptyCollection: function() {
+        pages.remove({}, function(e) {});
+        users.remove({}, function(e) {});
+        posts.remove({}, function(e) {});
+        following.remove({}, function(e) {});
     }
 }
