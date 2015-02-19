@@ -16,6 +16,8 @@
  * @Version -
  */
 
+ $.support.cors = true;
+
 //on document ready, as soon as it begins to load
 $(function() {
     Lungo.init({name: "Obits", history: false});

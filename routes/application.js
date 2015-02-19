@@ -148,7 +148,10 @@ exports.searchpage = function(req, res) {
 
 exports.emptydb = function(r, res) {
     app.emptyCollection();
-    res.json({status: "OK", message: "emptied the database"});
+    res.json({
+        status: "OK",
+        message: "emptied the database"
+    });
 }
 
 var app = {
@@ -172,14 +175,14 @@ var app = {
                 */
 
                 var response = user
-                //get user pages, followers and lastly newsfeed
+                    //get user pages, followers and lastly newsfeed
                 app.getUserPages(user._id).then(function(data) {
                     response.pages = data;
                     //get followers
                     app.getFollowers(user._id).then(function(data) {
                         response.following = data;
                         console.log("pages", response.pages)
-                        //get user's newfeed
+                            //get user's newfeed
                         if (!_.isEmpty(response.pages)) {
                             var pageids = _.pluck(response.pages, '_id');
                             var params = _.compact(_.flatten(_.zip(pageids, [user._id])));
@@ -338,13 +341,19 @@ var app = {
     },
     addFollower: function(page, userid, respond) {
         var f = schemas.following
-        //see if the user is following anyone
+            //see if the user is following anyone
         app.getFollowers(userid).then(function(results) {
             var message = "User is now following page at " + moment().format()
             if (!_.isEmpty(results)) { //if he is following any page
-                var userSearch = {userid: userid}
-                //find user and update following base
-                following.update(userSearch, {'$push': {following: page}}, function(e) {
+                var userSearch = {
+                        userid: userid
+                    }
+                    //find user and update following base
+                following.update(userSearch, {
+                    '$push': {
+                        following: page
+                    }
+                }, function(e) {
                     //page pushed to array of following
                     if (e) throw e;
                     else {
@@ -375,9 +384,15 @@ var app = {
         app.getFollowers(userid).then(function(results) {
             var message = "User has stopped following at " + moment().format()
             if (!uc.isEmpty(results)) { //if he is following any page
-                var userSearch = {userid: userid}
-                //find user and update following base
-                following.update(userSearch, {'$pull': {following: page}}, function(e) {
+                var userSearch = {
+                        userid: userid
+                    }
+                    //find user and update following base
+                following.update(userSearch, {
+                    '$pull': {
+                        following: page
+                    }
+                }, function(e) {
                     //page pushed to array of following
                     if (e) throw e;
                     else {
@@ -404,28 +419,28 @@ var app = {
         //do the search now
         console.log("getting newfeed from this array - ", search);
         posts.find({
-            '$query': {
-                '$or': [{
-                    createdby: userid
-                }, {
-                    pageid: {
-                        '$in': search
-                    }
-                }]
-            },
-            '$orderby': {
-                createdat: -1
-            }
-        }, {
-            limit: 30
-        }).toArray(function(e, res) {
-            if (e) throw e;
-            if (res) {
-                deferred.resolve(res)
-            } else {
-                deferred.resolve([])
-            }
-        }) //.limit(30); //max 30 posts
+                '$query': {
+                    '$or': [{
+                        createdby: userid
+                    }, {
+                        pageid: {
+                            '$in': search
+                        }
+                    }]
+                },
+                '$orderby': {
+                    createdat: -1
+                }
+            }, {
+                limit: 30
+            }).toArray(function(e, res) {
+                if (e) throw e;
+                if (res) {
+                    deferred.resolve(res)
+                } else {
+                    deferred.resolve([])
+                }
+            }) //.limit(30); //max 30 posts
         return deferred.promise;
     },
     getPageFeed: function(pageid) {
@@ -471,18 +486,32 @@ var app = {
         return deferred.promise;
     },
     searchPage: function(param) {
-        var deferred =  new Deferred();
+        var deferred = new Deferred();
         // param = '^(' + param.toLowerCase() + ')\\s?[\\w.-]+?$'
-        var re = new RegExp(param, 'gi'); console.log(re)
-        //now search the DB
-        //FAILED (returns ids only) - {'$or': [{firstname: {'$regex': re}}, {lastname: {'$regex': re}}]}, {'$limit': 30}
-        pages.find({fullNames: {'$regex': re}}).toArray(function(e, res) {
-            if(e) throw e;
-            if(res && !_.isEmpty(res)) {
-                var ids = $.map(res, function(m, i) { return m._id; });
-                deferred.resolve({status: true, results: res, ids: ids});
-            }else{
-                deferred.resolve({status: false, message: "Ohw! no page has been found related to the name '" + param + "'"});
+        var re = new RegExp(param, 'gi');
+        console.log(re)
+            //now search the DB
+            //FAILED (returns ids only) - {'$or': [{firstname: {'$regex': re}}, {lastname: {'$regex': re}}]}, {'$limit': 30}
+        pages.find({
+            fullNames: {
+                '$regex': re
+            }
+        }).toArray(function(e, res) {
+            if (e) throw e;
+            if (res && !_.isEmpty(res)) {
+                var ids = $.map(res, function(m, i) {
+                    return m._id;
+                });
+                deferred.resolve({
+                    status: true,
+                    results: res,
+                    ids: ids
+                });
+            } else {
+                deferred.resolve({
+                    status: false,
+                    message: "Ohw! no page has been found related to the name '" + param + "'"
+                });
             }
         })
         return deferred.promise;

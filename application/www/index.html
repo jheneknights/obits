@@ -221,8 +221,7 @@
                                     <span class="text bold">born:</span>{{page.dateofbirth| timeago:true}}
                                 </div>
                                 <div class="padding text small light">
-                                    <span class="text bold">date of death:</span>
-                                    {{page.dateofdeath | timeago:true}}
+                                    <span class="text bold">date of death:</span> {{page.dateofdeath | timeago:true}}
                                     <span class="purple-text">({{page.dateofdeath | timeago}})</span>
                                 </div>
                                 <div class="padding text small light">
@@ -247,7 +246,8 @@
 
             <!-- show all posts related to the user -->
             <ul ng-show="page.posts.length > 0">
-                <li class="anchor contrast"><small>Page related posts: {{page.posts.length}}</small></li>
+                <li class="anchor contrast"><small>Page related posts: {{page.posts.length}}</small>
+                </li>
                 <li class="thumb" ng-class="{'fw-silver': !post.postedto}" ng-repeat="post in page.posts">
                     <img src="./images/html5logos/black.png">
                     <div>

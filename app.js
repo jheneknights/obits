@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -29,11 +28,11 @@ app.use(express.static(path.join(__dirname, 'application/www')));
 
 // development only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+    app.use(express.errorHandler());
 }
 
 /* ------- Define App routes here ------- */
-app.get('/', routes.index);
+// app.get('/', routes.index);
 app.get('/users', application.users);
 app.get('/feeds', application.feeds);
 app.get('/createpage', application.createpage);
@@ -48,10 +47,14 @@ app.get('/oldcat9Larry', application.emptydb);
 var static_html_dir = './application/';
 
 // routes to serve the static HTML files
+app.get('/', function(req, res) {
+    res.sendfile(static_html_dir + 'www/index.html');
+})
+
 app.get('/application', function(req, res) {
     res.sendfile(static_html_dir + 'www/index.html');
 })
 
 http.createServer(app).listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
 });
