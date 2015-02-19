@@ -48,6 +48,10 @@ var static_html_dir = './application/';
 
 // routes to serve the static HTML files
 app.get('/', function(req, res) {
+    // res.json({
+    //     status: 200,
+    //     message: "Server up and running smoothly."
+    // })
     res.sendfile(static_html_dir + 'www/index.html');
 })
 
