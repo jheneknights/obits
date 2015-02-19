@@ -11,8 +11,8 @@
         "moment": "2.0.0",
         "mongoskin": "*",
         "jquery": "*",
-        "underscore": "1.5.1",
-        "promised-io": "0.3.4"
+        "underscore": "*",
+        "promised-io": "*"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
