@@ -31,6 +31,22 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+//http://stackoverflow.com/questions/7067966/how-to-allow-cors-in-express-nodejs#answer-7069902
+//enable cross-origin resource -- CORS
+// var allowCrossDomains = function(req, res, next) {
+//     res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// }
+//For simple CORS requests, the server only needs to add the following header to its response
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
 /* ------- Define App routes here ------- */
 // app.get('/', routes.index);
 app.get('/users', application.users);
