@@ -5,20 +5,13 @@
     "private": true,
     "main": "app.js",
     "dependencies": {
-        "express": ">=3.4.0",
-        "stylus": "*",
+        "express": "3.4.0",
         "jade": "*",
-        "moment": ">=2.0.0",
+        "moment": "2.0.0",
         "mongoskin": "*",
-        "underscore": "*",
-        "jquery": ">=1.6.2",
-        "promised-io": "*"
-    },
-    "devDependencies": {
-        "grunt": "*",
-        "grunt-contrib-jshint": "*",
-        "grunt-contrib-uglify": "*",
-        "grunt-contrib-watch": "*"
+        "jquery": "*",
+        "underscore": "1.5.1",
+        "promised-io": "0.3.4"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
